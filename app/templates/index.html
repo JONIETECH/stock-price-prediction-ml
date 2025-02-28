@@ -130,6 +130,12 @@
                 <div class="stock-price">${{ prediction }}</div>
             </div>
             {% endif %}
+            {% if error %}
+            <div class="result error">
+                <h3>Error</h3>
+                <p>{{ error }}</p>
+            </div>
+            {% endif %}
         </div>
         <div class="market-panel">
             <h2>Live Market Data</h2>
