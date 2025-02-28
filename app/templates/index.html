@@ -18,14 +18,11 @@
             border-bottom: 2px solid #4CAF50;
         }
         .main-container {
-            max-width: 1200px;
+            max-width: 800px;
             margin: 20px auto;
             padding: 0 20px;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
         }
-        .prediction-panel, .market-panel {
+        .prediction-panel {
             background-color: #2d2d2d;
             padding: 20px;
             border-radius: 10px;
@@ -69,38 +66,16 @@
             border-radius: 5px;
             border-left: 4px solid #4CAF50;
         }
-        .stock-ticker {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 15px;
-            margin-top: 20px;
-        }
-        .stock-card {
-            background-color: #1a1a1a;
-            padding: 15px;
-            border-radius: 5px;
-            border: 1px solid #4CAF50;
-        }
-        .stock-price {
+        .predicted-price {
             font-size: 24px;
             font-weight: 500;
             color: #4CAF50;
-        }
-        .stock-change.positive {
-            color: #4CAF50;
-        }
-        .stock-change.negative {
-            color: #ff4444;
-        }
-        .price-label {
-            color: #888;
-            font-size: 12px;
         }
     </style>
 </head>
 <body>
     <div class="header">
-        <h1>Stock Price Prediction Platform</h1>
+        <h1>Stock Price Prediction</h1>
     </div>
     <div class="main-container">
         <div class="prediction-panel">
@@ -127,7 +102,7 @@
             {% if prediction %}
             <div class="result">
                 <h3>Predicted Stock Price</h3>
-                <div class="stock-price">${{ prediction }}</div>
+                <div class="predicted-price">${{ prediction }}</div>
             </div>
             {% endif %}
             {% if error %}
@@ -136,21 +111,6 @@
                 <p>{{ error }}</p>
             </div>
             {% endif %}
-        </div>
-        <div class="market-panel">
-            <h2>Live Market Data</h2>
-            <div class="stock-ticker">
-                {% for stock in live_stocks %}
-                <div class="stock-card">
-                    <h3>{{ stock.symbol }}</h3>
-                    <div class="stock-price">${{ stock.price }}</div>
-                    <div class="stock-change {{ 'positive' if stock.change >= 0 else 'negative' }}">
-                        {{ stock.change }}%
-                    </div>
-                    <div class="price-label">Last updated: {{ stock.last_updated }}</div>
-                </div>
-                {% endfor %}
-            </div>
         </div>
     </div>
 </body>
