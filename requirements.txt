@@ -2,3 +2,5 @@ scikit-learn==1.6.1
 fastapi
 numpy
 uvicorn
+jinja2
+python-multipart
