@@ -21,4 +21,4 @@ This project is a **Linear Regression-based Stock Price Prediction Model** that 
 
 🚀 **Use this model to gain insights into stock price movements and make informed trading decisions!**  
 
-Would you like to include setup instructions or API integration details? 😊
+
