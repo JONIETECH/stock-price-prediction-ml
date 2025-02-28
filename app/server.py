@@ -1,6 +1,7 @@
 from fastapi import FastAPI, Request, Form
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
+from fastapi.staticfiles import StaticFiles
 import joblib
 import numpy as np
 from pydantic import BaseModel
@@ -24,6 +25,8 @@ except Exception as e:
     raise
 
 app = FastAPI()
+# Mount static files directory
+app.mount("/static", StaticFiles(directory="app/static"), name="static")
 templates = Jinja2Templates(directory="app/templates")
 
 @app.get('/', response_class=HTMLResponse)
