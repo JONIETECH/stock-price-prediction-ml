@@ -12,7 +12,7 @@ logger = logging.getLogger(__name__)
 
 def train_model():
     try:
-        # Load the data
+        # Load the dataset
         logger.info("Loading dataset...")
         df = pd.read_csv('app/stock_data.csv')
         

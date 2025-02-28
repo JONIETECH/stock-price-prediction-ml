@@ -39,7 +39,7 @@ async def predict_form(
     open_price: float = Form(...),
     high_price: float = Form(...),
     low_price: float = Form(...),
-    volume: float = Form(...)  # Changed from close_price to volume
+    volume: float = Form(...)
 ):
     try:
         # Prepare features
@@ -79,8 +79,7 @@ async def predict(data: StockFeatures):
     """
     Predicts the stock price based on given features.
 
-    Args:
-        data: StockFeatures object containing:
+        StockFeatures object containing:
             - open: Opening price
             - high: Highest price
             - low: Lowest price
