@@ -4,6 +4,9 @@ from fastapi.responses import HTMLResponse
 import joblib
 import numpy as np
 from pydantic import BaseModel
+import yfinance as yf
+from datetime import datetime
+import pytz
 
 class StockFeatures(BaseModel):
     features: list[float]
@@ -13,9 +16,33 @@ model = joblib.load('app/linear_regression_model.joblib')
 app = FastAPI()
 templates = Jinja2Templates(directory="app/templates")
 
+def get_live_stocks():
+    """Get live stock data for popular stocks"""
+    symbols = ['AAPL', 'GOOGL', 'MSFT', 'AMZN', 'TSLA', 'META']
+    stocks_data = []
+    
+    for symbol in symbols:
+        try:
+            stock = yf.Ticker(symbol)
+            current_data = stock.info
+            stocks_data.append({
+                'symbol': symbol,
+                'price': f"{current_data.get('regularMarketPrice', 0):.2f}",
+                'change': f"{current_data.get('regularMarketChangePercent', 0):.2f}",
+                'last_updated': datetime.now(pytz.UTC).strftime("%H:%M:%S UTC")
+            })
+        except:
+            continue
+    
+    return stocks_data
+
 @app.get('/', response_class=HTMLResponse)
 def read_root(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request})
+    live_stocks = get_live_stocks()
+    return templates.TemplateResponse("index.html", {
+        "request": request,
+        "live_stocks": live_stocks
+    })
 
 @app.post('/', response_class=HTMLResponse)
 async def predict_form(
@@ -27,11 +54,16 @@ async def predict_form(
 ):
     features = np.array([[open_price, high_price, low_price, close_price]])
     prediction = model.predict(features)[0]
-    # Format prediction to 2 decimal places
     formatted_prediction = f"{prediction:.2f}"
+    live_stocks = get_live_stocks()
+    
     return templates.TemplateResponse(
         "index.html",
-        {"request": request, "prediction": formatted_prediction}
+        {
+            "request": request,
+            "prediction": formatted_prediction,
+            "live_stocks": live_stocks
+        }
     )
 
 @app.post('/predict')

@@ -2,69 +2,150 @@
 <html>
 <head>
     <title>Stock Price Prediction</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            max-width: 800px;
-            margin: 0 auto;
-            padding: 20px;
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #1a1a1a;
+            color: #ffffff;
         }
-        .container {
-            background-color: #f5f5f5;
+        .header {
+            background-color: #2d2d2d;
             padding: 20px;
-            border-radius: 5px;
+            text-align: center;
+            border-bottom: 2px solid #4CAF50;
+        }
+        .main-container {
+            max-width: 1200px;
+            margin: 20px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .prediction-panel, .market-panel {
+            background-color: #2d2d2d;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #4CAF50;
         }
         input[type="number"] {
-            width: 100px;
-            padding: 5px;
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #4CAF50;
+            border-radius: 5px;
+            background-color: #1a1a1a;
+            color: #ffffff;
+            font-size: 16px;
         }
         button {
             background-color: #4CAF50;
             color: white;
-            padding: 10px 20px;
+            padding: 12px 24px;
             border: none;
-            border-radius: 4px;
+            border-radius: 5px;
             cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            width: 100%;
+        }
+        button:hover {
+            background-color: #45a049;
         }
         .result {
             margin-top: 20px;
-            padding: 10px;
-            background-color: #e8f5e9;
-            border-radius: 4px;
+            padding: 15px;
+            background-color: #1a1a1a;
+            border-radius: 5px;
+            border-left: 4px solid #4CAF50;
+        }
+        .stock-ticker {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .stock-card {
+            background-color: #1a1a1a;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #4CAF50;
+        }
+        .stock-price {
+            font-size: 24px;
+            font-weight: 500;
+            color: #4CAF50;
+        }
+        .stock-change.positive {
+            color: #4CAF50;
+        }
+        .stock-change.negative {
+            color: #ff4444;
+        }
+        .price-label {
+            color: #888;
+            font-size: 12px;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Stock Price Prediction Model</h1>
-        <form method="post">
-            <div class="form-group">
-                <label>Open Price ($): </label>
-                <input type="number" name="open_price" step="0.01" required>
+    <div class="header">
+        <h1>Stock Price Prediction Platform</h1>
+    </div>
+    <div class="main-container">
+        <div class="prediction-panel">
+            <h2>Price Prediction Model</h2>
+            <form method="post">
+                <div class="form-group">
+                    <label>Opening Price ($)</label>
+                    <input type="number" name="open_price" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label>High Price ($)</label>
+                    <input type="number" name="high_price" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label>Low Price ($)</label>
+                    <input type="number" name="low_price" step="0.01" required>
+                </div>
+                <div class="form-group">
+                    <label>Close Price ($)</label>
+                    <input type="number" name="close_price" step="0.01" required>
+                </div>
+                <button type="submit">Generate Prediction</button>
+            </form>
+            {% if prediction %}
+            <div class="result">
+                <h3>Predicted Stock Price</h3>
+                <div class="stock-price">${{ prediction }}</div>
             </div>
-            <div class="form-group">
-                <label>High Price ($): </label>
-                <input type="number" name="high_price" step="0.01" required>
-            </div>
-            <div class="form-group">
-                <label>Low Price ($): </label>
-                <input type="number" name="low_price" step="0.01" required>
-            </div>
-            <div class="form-group">
-                <label>Close Price ($): </label>
-                <input type="number" name="close_price" step="0.01" required>
-            </div>
-            <button type="submit">Predict Next Price</button>
-        </form>
-        {% if prediction %}
-        <div class="result">
-            <h3>Predicted Stock Price:</h3>
-            <p>${{ prediction }}</p>
+            {% endif %}
         </div>
-        {% endif %}
+        <div class="market-panel">
+            <h2>Live Market Data</h2>
+            <div class="stock-ticker">
+                {% for stock in live_stocks %}
+                <div class="stock-card">
+                    <h3>{{ stock.symbol }}</h3>
+                    <div class="stock-price">${{ stock.price }}</div>
+                    <div class="stock-change {{ 'positive' if stock.change >= 0 else 'negative' }}">
+                        {{ stock.change }}%
+                    </div>
+                    <div class="price-label">Last updated: {{ stock.last_updated }}</div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
     </div>
 </body>
 </html> 
